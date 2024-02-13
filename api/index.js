@@ -31,15 +31,6 @@ app.route("/").get(function(req, res){
     res.render("index");
 })
 
-// app.route("/update/:taskId").get(function(req, res){
-
-//     // getting the taskId
-//     var taskId = req.params.taskId;
-
-//     // reder the update page
-//     res.render("update", { taskId: taskId });
-// });
-
 app.use("/api/listing", listingRoutes);
 
 app.use((err, req, res, next) => {
