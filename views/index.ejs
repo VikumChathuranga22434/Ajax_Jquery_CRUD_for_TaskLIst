@@ -26,9 +26,10 @@
                     <h3>Update a Task</h3>    
                 </div>
                 <input type="text" id="UpdateTitle" placeholder="Input title">
-                <textarea name="UpdateDescription" id="description" cols="30" rows="10" placeholder="Enter the description for task"></textarea>
-                <input type="Number" id="UpdatePriority" placeholder="Input priority">
-                <button id="update" type="button" onclick="handleUpdate">Update a task</button>
+                <textarea name="Description" id="UpdateDescription" cols="30" rows="10" placeholder="Enter the description for task"></textarea>
+                <input type="number" id="UpdatePriority" placeholder="Input priority">
+                <input type="hidden" id="taskId" placeholder="task">
+                <button id="update" type="submit">Update a task</button>
             </form>
         </div>
         <div class="task-col">

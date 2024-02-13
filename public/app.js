@@ -1,7 +1,7 @@
 $(document).ready(function(){
 
     // check the status of the submissiom button,if is set
-    $("form").on("submit", function(event) {
+    $("#create-listing").on("submit", function(event) {
         
         // restricting the refreshing while the posting data
         event.preventDefault();
@@ -23,14 +23,24 @@ $(document).ready(function(){
                 priority: priority
             }),
             success: function(res){
-                console.log("Listing successfully: ", res)
+                // console.log("Listing successfully: ", res)
                 $("form").hide();
+                handleGetList();
             },
             error: function(xhr, status, error){
                 console.log(error);
             }
         })
     })
+
+    // Handle form submission for updating a task
+    $("#update-listing").on("submit", function(event) {
+        // Prevent default form submission behavior
+        event.preventDefault();
+        
+        // Invoke the handleUpdateSubmit function
+        handleUpdateSubmit();
+    });
 });
 
 function handleGetList() {
@@ -42,7 +52,7 @@ function handleGetList() {
         success: function(data) {
             $("#create-listing").hide();
             $("#update-listing").hide();
-            console.log("Data received: ", data);
+            // console.log("Data received: ", data);
 
             // displaying the data in the div
             const table = $('.get-list');
@@ -68,19 +78,26 @@ function handleGetList() {
 
 function handleUpdate (taskId) {
 
+    //show the update form
+    $("#update-listing").show();
+
     $.ajax({
         url: "/api/listing/get/" + taskId,
         method: "GET",
         contentType: "application/json",
         success: function(response) {
-            console.log(response);
+            // console.log(response);
 
             // get filled with details
             // Set placeholders based on response data
             $("#UpdateTitle").attr("value", response.title);
             $("#UpdateDescription").attr("placeholder", response.description);
-            $("#UpdatePriority").attr("value", response.priority); 
+            $("#UpdatePriority").attr("value", response.priority);
+            $("#taskId").attr("value", taskId)
             
+            // hide the other sections
+            $(".task-col").hide();
+            $(".table-div").hide();
             
         },
         error: function(xhr, status, error){
@@ -96,7 +113,7 @@ function handleDelete (taskId) {
         contentType: "application/json",
         success: function (response){
             alert("Task has been deleted");
-            handleGetList();
+            window.location.reload();
         },
         error: function(xhr, status, error){
             console.log(error);
@@ -104,22 +121,18 @@ function handleDelete (taskId) {
     })
 }
 
-function handleUpdateSubmit (taskId) {
-   // Handle form submission
-   $("form").off("submit").on("submit", function(event) {
-        // Prevent form submission
-        event.preventDefault();
+// Handle form submission
+function handleUpdateSubmit () {
 
         // Getting the input from the form submission
-        var title = $("#title").val();
-        var description = $("#description").val();
-        var priority = $("#priority").val();
-
-        const url = "/api/listing/update/" + taskId;
+        var title = $("#UpdateTitle").val();
+        var description = $("#UpdateDescription").val();
+        var priority = $("#UpdatePriority").val();
+        var taskId = $("#taskId").val();
 
         // Prepare API call to update the task
         $.ajax({
-            url: url,
+            url: "/api/listing/update/" + taskId,
             method: "POST",
             contentType: "application/json",
             data: JSON.stringify({
@@ -129,11 +142,12 @@ function handleUpdateSubmit (taskId) {
             }),
             success: function(data) {
                 alert("Task updated Successfully!");
-                handleGetList();
+                $(".task-col").show();
+                $(".table-div").show();
+                window.location.reload();
             },
             error: function(xhr, status, error) {
                 console.log(error);
             }
         });
-    });
-}
+};
